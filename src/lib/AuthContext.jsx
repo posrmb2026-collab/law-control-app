@@ -22,6 +22,20 @@ export const AuthProvider = ({ children }) => {
       setIsLoadingPublicSettings(true);
       setAuthError(null);
       
+      // Demo mode: se não houver appId ou serverUrl, usar modo demo
+      if (!appParams.appId || !appParams.serverUrl) {
+        console.log('Demo mode: usando configuração padrão');
+        setAppPublicSettings({
+          id: 'demo-app',
+          public_settings: { demo: true }
+        });
+        setIsLoadingPublicSettings(false);
+        setIsLoadingAuth(false);
+        setIsAuthenticated(true);
+        setUser({ id: 'demo-user', name: 'Demo User' });
+        return;
+      }
+      
       // First, check app public settings (with token if available)
       // This will tell us if auth is required, user not registered, etc.
       const appClient = createAxiosClient({
