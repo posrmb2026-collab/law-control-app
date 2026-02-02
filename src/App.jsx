@@ -24,20 +24,27 @@ const AuthenticatedApp = () => {
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-indigo-600 font-medium">Carregando Law Control...</p>
+        </div>
       </div>
     );
   }
 
-  // Handle authentication errors
-  if (authError) {
+  // Handle authentication errors - but in demo mode, still show the app
+  if (authError && authError.type !== 'unknown') {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
+      // In demo mode, don't redirect to login
+      if (isAuthenticated) {
+        // Continue to app
+      } else {
+        navigateToLogin();
+        return null;
+      }
     }
   }
 
